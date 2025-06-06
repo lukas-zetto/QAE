@@ -14,7 +14,7 @@
 #SBATCH --time=72:00:00
 # 
 # partition the job will run on
-#SBATCH --partition single
+#SBATCH --partition cpu
 # 
 # expected memory requirements
 #SBATCH --mem=64000MB
