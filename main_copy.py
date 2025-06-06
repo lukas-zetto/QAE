@@ -222,7 +222,7 @@ def main():
     num_qubits = args.num_qubits
     decoder_option = args.decoder_option
     num_threads = args.num_threads
-    num_iterations = 1000
+    num_iterations = 500
     num_bucketruns = 1
     target_proportion = 0.50
     anomaly_likelihood_per_bucket = 0.95 #######todo
