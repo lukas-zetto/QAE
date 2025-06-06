@@ -1,4 +1,5 @@
 import argparse
+import os
 import numpy as np
 import pickle
 import time
@@ -277,6 +278,7 @@ def main():
     print(f"Total execution time: {execution_time:.2f} seconds")
     
     with open('results/ensemble_res.pkl', 'wb') as f:
+        os.makedirs("results", exist_ok=True)
         pickle.dump(all_results, f)
     print("Results saved to ensemble_res.pkl")
 
