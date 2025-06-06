@@ -146,7 +146,7 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
     print(f"Bucket size: {bucket_size}")
 
     # Run feature selection on the data to select features for amplitude encoding
-    selected_data, selected_features = feature_selection_MTS.select_features(preprocessed_data, num_qubits, strategy='a')
+    selected_data, selected_features = feature_selection_MTS.select_features(preprocessed_data, num_qubits, strategy='b')
     
     print(f"Number of features selected: {len(selected_features)}")
     print("Selected features:", selected_features)

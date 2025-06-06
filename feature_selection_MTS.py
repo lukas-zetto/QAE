@@ -4,6 +4,7 @@ import pandas as pd
 
 
 def time_selector(target_features, f, w):
+    
     selected_indices = set()
     time_indices = np.random.choice(w, size= target_features // f, replace=False)
     for time in time_indices:
@@ -19,10 +20,10 @@ def sensor_selector(target_features, f, w):
         for time in range(w):
             selected_indices.add(s * w + time)
         
-    return sorted(list(selected_indices))[:target_features]    
+    return sorted(list(selected_indices))[:target_features]  
 
 
-def select_features(data, num_qubits, strategy='a'):
+def select_features(data, num_qubits, strategy='b'):
     """
     Select features based on the specified strategy.
     
@@ -35,29 +36,21 @@ def select_features(data, num_qubits, strategy='a'):
     pd.DataFrame: Data with selected features (including added 0-features if necessary)
     list: Indices of selected features
     """
-    num_features = 2**num_qubits - 1
+    num_features = 2**num_qubits - 1 
     original_num_features = data.shape[1]
-    
-    #if the number of features is greater than the original number of features, add zero features rather than selecting features
-    if num_features >= original_num_features:
-        selected_data = data.copy()
-        num_zero_features = num_features - original_num_features
-        for i in range(num_zero_features):
-            selected_data[f'zero_feature_{i}'] = 0
-        return selected_data, list(range(num_features))
+
 
     # Assume data shape: (samples, features), features = f * w
-    f = ... # set number of sensors
-    w = ... # set number of time steps
+    f = 5 # set number of sensors
+    w = 50# set number of time steps
 
     if strategy == 'a':
         indices = sensor_selector(num_features, f, w)
         selected_data = data.iloc[:, indices]
-        return selected_data  # Only return the selected entries
-
     elif strategy == 'b':
         indices = time_selector(num_features, f, w)
         selected_data = data.iloc[:, indices]
-        return selected_data  # Only return the selected entries
 
- 
+
+    return selected_data, indices
+

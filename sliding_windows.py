@@ -3,11 +3,13 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import os
 import pickle
+from sklearn.decomposition import PCA
+
 
 def create_sliding_windows_from_csv(
     csv_path, 
-    window_size=10, 
-    stride=1, 
+    window_size=50, 
+    stride=5, 
     save_output=False, 
     output_dir='sliding_windows_data'
 ):
@@ -35,6 +37,28 @@ def create_sliding_windows_from_csv(
     data = pd.DataFrame(scaler.fit_transform(df_pivot), columns=df_pivot.columns)
     data = range_based_normalize(data)
 
+    scaler = StandardScaler()
+    data = pd.DataFrame(scaler.fit_transform(df_pivot), columns=df_pivot.columns)
+    data = range_based_normalize(data)  # Assuming you have this function
+
+    # 3. Perform PCA on normalized data (keep all components)
+    pca = PCA()
+    pca.fit(data)
+
+# 4. Calculate feature importance by summing absolute values of top 3 components' loadings
+    n_top_components = 5
+    components = pca.components_[:n_top_components]  # shape (3, n_features)
+    importance = np.sum(np.abs(components), axis=0)  # shape (n_features,)
+
+# 5. Select indices of top 3 important features
+    top3_indices = importance.argsort()[::-1][:5]
+
+# 6. Get the column names of those features
+    top3_features = data.columns[top3_indices]
+
+# 7. Select only those columns from data
+    data = data[top3_features]
+
     T, f = data.shape
     windows = []
     window_indices = []
@@ -45,7 +69,10 @@ def create_sliding_windows_from_csv(
         windows.append(window_flat)
         window_indices.append(start)  # Mapping: Startindex → Window
 
-    X_windows = np.array(windows)
+    #X_windows = np.array(windows)
+    columns = [f'sensor{s}_t{t}' for s in range(f) for t in range(window_size)]
+    X_windows = pd.DataFrame(windows, columns=columns)
+
     original_to_window = dict(zip(window_indices, range(len(window_indices))))
 
     if save_output:
