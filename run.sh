@@ -19,7 +19,7 @@
 # expected memory requirements
 #SBATCH --mem=64000MB
 
-python main.py 4 1 --num_threads 8
+python main_copy.py 4 1 --num_threads 8
 
 # Done
 exit 0
