@@ -226,7 +226,7 @@ def main():
     num_iterations = 500
     num_bucketruns = 1
     target_proportion = 0.50
-    anomaly_likelihood_per_bucket = 0.95 #######todo
+    anomaly_likelihood_per_bucket = 0.98 #######todo
 
     start_time = time.time()
 
