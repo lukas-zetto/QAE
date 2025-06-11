@@ -277,8 +277,8 @@ def main():
     execution_time = end_time - start_time
     print(f"Total execution time: {execution_time:.2f} seconds")
     
+    os.makedirs("results", exist_ok=True)
     with open('results/ensemble_res.pkl', 'wb') as f:
-        os.makedirs("results", exist_ok=True)
         pickle.dump(all_results, f)
     print("Results saved to ensemble_res.pkl")
 
