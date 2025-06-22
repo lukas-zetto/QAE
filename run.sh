@@ -23,7 +23,7 @@
 #
 
 OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
-python main_copy.py 4 1 --num_threads 1 --slurm_id = ${SLURM_ARRAY_TASK_ID}
+python main_copy.py 4 1 --num_threads 8 --slurm_id ${SLURM_ARRAY_TASK_ID}
 
 # Done
 exit 0
