@@ -5,7 +5,7 @@
 # 
 # define how many nodes we need
 #SBATCH --nodes=1
-#SBATCH --cpus-per-tasks=8
+#SBATCH --cpus-per-task=8
 #
 # we only need 1 cpu at a time
 #SBATCH --ntasks=1
