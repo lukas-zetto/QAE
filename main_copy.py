@@ -25,6 +25,9 @@ def parse_arguments():
     parser.add_argument("num_qubits", type=int, help="Number of qubits to use")
     parser.add_argument("decoder_option", type=int, choices=[1, 2], help="Decoder option: 1 for Qiskit's .inverse(), 2 for manual decoder")
     parser.add_argument("--num_threads", type=int, default=4, help="Number of threads to use")
+    
+    parser.add_argument("--slurm_id", type=int, default=1, help="SLURM array task ID (used to select iteration count)")
+
     return parser.parse_args()
 
 
@@ -223,10 +226,26 @@ def main():
     num_qubits = args.num_qubits
     decoder_option = args.decoder_option
     num_threads = args.num_threads
+    iteration = args.iteration
     num_iterations = 500
     num_bucketruns = 1
     target_proportion = 0.50
     anomaly_likelihood_per_bucket = 0.98 #######todo
+
+
+    slurm_id_to_iterations = {
+    1: 200,
+    2: 500,
+    3: 750,
+    4: 1000
+}
+
+    if args.slurm_id not in slurm_id_to_iterations:
+        raise ValueError(f"Unknown SLURM ID {args.slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
+
+    num_iterations = slurm_id_to_iterations[args.slurm_id]
+
+
 
     start_time = time.time()
 
@@ -278,9 +297,9 @@ def main():
     print(f"Total execution time: {execution_time:.2f} seconds")
     
     os.makedirs("results", exist_ok=True)
-    with open('results/ensemble_res.pkl', 'wb') as f:
+    with open(f'results/ensemble_res_{num_iterations}.pkl', 'wb') as f:
         pickle.dump(all_results, f)
-    print("Results saved to ensemble_res.pkl")
+    print(f"Results saved to ensemble_res_{num_iterations}.pkl")
 
 if __name__ == "__main__":
     main()

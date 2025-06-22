@@ -5,21 +5,25 @@
 # 
 # define how many nodes we need
 #SBATCH --nodes=1
+#SBATCH --cpus-per-tasks=8
 #
 # we only need 1 cpu at a time
 #SBATCH --ntasks=1
 #
 # expected duration of the job
 #              hh:mm:ss
-#SBATCH --time=72:00:00
+#SBATCH --time=12:00:00
 # 
 # partition the job will run on
 #SBATCH --partition cpu
 # 
 # expected memory requirements
 #SBATCH --mem=64000MB
+#SBATCH --array=1,2,3,4
+#
 
-python main_copy.py 4 1 --num_threads 8
+OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+python main_copy.py 4 1 --num_threads 1 --slurm_id = ${SLURM_ARRAY_TASK_ID}
 
 # Done
 exit 0
