@@ -226,7 +226,7 @@ def main():
     num_qubits = args.num_qubits
     decoder_option = args.decoder_option
     num_threads = args.num_threads
-    iteration = args.iteration
+    slurm_id = args.slurm_id
     num_iterations = 500
     num_bucketruns = 1
     target_proportion = 0.50
@@ -240,10 +240,10 @@ def main():
     4: 1000
 }
 
-    if args.slurm_id not in slurm_id_to_iterations:
-        raise ValueError(f"Unknown SLURM ID {args.slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
+    if slurm_id not in slurm_id_to_iterations:
+        raise ValueError(f"Unknown SLURM ID {slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
 
-    num_iterations = slurm_id_to_iterations[args.slurm_id]
+    num_iterations = slurm_id_to_iterations[slurm_id]
 
 
 
