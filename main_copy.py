@@ -234,10 +234,10 @@ def main():
 
 
     slurm_id_to_iterations = {
-    1: 200,
-    2: 500,
-    3: 750,
-    4: 1000
+    1: 100,
+    2: 300,
+    3: 400,
+    4: 1200
 }
 
     if slurm_id not in slurm_id_to_iterations:

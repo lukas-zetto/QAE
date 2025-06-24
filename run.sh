@@ -12,13 +12,13 @@
 #
 # expected duration of the job
 #              hh:mm:ss
-#SBATCH --time=12:00:00
+#SBATCH --time=8:00:00
 # 
 # partition the job will run on
 #SBATCH --partition cpu
 # 
 # expected memory requirements
-#SBATCH --mem=64000MB
+#SBATCH --mem=1000MB
 #SBATCH --array=1,2,3,4
 #
 
