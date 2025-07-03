@@ -6,7 +6,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import sliding_windows
-import sliding_windows_SMD
 from Preprocessing.goldstein_uchida_preprocess import preprocess_goldstein_uchida
 from Preprocessing.ccpp_preprocess import preprocess_ccpp
 from data_bucketing import perform_bucketing
@@ -234,15 +233,28 @@ def main():
     anomaly_likelihood_per_bucket = 0.98 #######todo
 
 
+    slurm_id_to_iterations = {
+    1: 100,
+    2: 300,
+    3: 400,
+    4: 1200
+}
+
+    if slurm_id not in slurm_id_to_iterations:
+        raise ValueError(f"Unknown SLURM ID {slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
+
+    num_iterations = slurm_id_to_iterations[slurm_id]
+
+
 
     start_time = time.time()
 
     #file_path = './Data/Goldstein_Uchida_datasets/breast-cancer-unsupervised-ad.csv'
-    file_path = './Data/filtered_5_features.csv'
+    file_path = './Data/SKAB teaser.csv'
 
     #Preprocess the data
     # preprocessed_data, high_risk_indices, _ = preprocess_goldstein_uchida(file_path)
-    windwows_info = sliding_windows_SMD.create_sliding_windows_from_csv(file_path)
+    windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path)
     preprocessed_data = windwows_info[0]
     
     print(f"Initial dataset size: {len(preprocessed_data)}")

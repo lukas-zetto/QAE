@@ -1,0 +1,27 @@
+import pandas as pd
+
+# Define the full list of column names in order
+all_columns = [
+    'cpu_r','load_1','load_5','load_15','mem_shmem','mem_u','mem_u_e','total_mem',
+    'disk_q','disk_r','disk_rb','disk_svc','disk_u','disk_w','disk_wa','disk_wb',
+    'si','so','eth1_fi','eth1_fo','eth1_pi','eth1_po','tcp_tw','tcp_use',
+    'active_opens','curr_estab','in_errs','in_segs','listen_overflows','out_rsts',
+    'out_segs','passive_opens','retranssegs','tcp_timeouts','udp_in_dg',
+    'udp_out_dg','udp_rcv_buf_errs','udp_snd_buf_errs'
+]
+
+# Columns you want to keep
+selected_columns = ['load_1', 'disk_r', 'disk_svc', 'disk_w', 'disk_wb']
+
+# Load the CSV and assign full headers
+df = pd.read_csv('ServerMachineDataset/test/machine-1-1.txt', header=None, names=all_columns)
+
+
+
+# Filter to just the selected columns
+filtered_df = df[selected_columns]
+
+# Save to a new CSV
+filtered_df.to_csv('filtered_5_features.csv', index=False)
+
+print("✅ Saved filtered dataset with 5 features to 'filtered_5_features.csv'")
