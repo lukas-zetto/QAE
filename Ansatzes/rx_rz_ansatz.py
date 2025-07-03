@@ -97,20 +97,19 @@ def update_circuit_parameters(circuit, encoder_params, decoder_params, new_angle
     Args:
     circuit (QuantumCircuit): The parameterized encoder-decoder circuit.
     encoder_params (ParameterVector): The encoder parameters.
-    decoder_params (ParameterVector): The decoder parameters (None for decoder option 1).
+    decoder_params (ParameterVector or None): The decoder parameters or None.
     new_angles (list): New angles for both encoder and decoder.
 
     Returns:
     QuantumCircuit: The updated circuit with new angles.
     """
     param_dict = {}
-    
+
     num_encoder_params = len(encoder_params)
     param_dict.update(dict(zip(encoder_params, new_angles[:num_encoder_params])))
-    
+
     if decoder_params is not None:
         param_dict.update(dict(zip(decoder_params, new_angles[num_encoder_params:])))
     
     bound_circuit = circuit.assign_parameters(param_dict)
-    
     return bound_circuit
