@@ -65,7 +65,7 @@ def perform_bucketing(preprocessed_data: np.ndarray, target_probability: float =
     Tuple[List[List[int]], int]: A tuple containing the list of buckets and the bucket size
     """
     num_datapoints = len(preprocessed_data)
-    num_anomalies = 42 #########todo
+    num_anomalies = 49 #########todo
     
     buckets = create_data_buckets(num_datapoints, num_anomalies, target_probability)
     bucket_size = len(buckets[0])  # all buckets except possibly the last one will have this size

@@ -39,10 +39,10 @@ def select_features(data, num_qubits, strategy='b'):
     num_features = 2**num_qubits - 1 
     original_num_features = data.shape[1]
 
-
     # Assume data shape: (samples, features), features = f * w
     f = 5 # set number of sensors
-    w = 20# set number of time steps
+    w = 100# set number of time steps
+    
 
     if strategy == 'a':
         indices = sensor_selector(num_features, f, w)

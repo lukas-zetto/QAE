@@ -24,8 +24,8 @@ def range_based_normalize(data):
 
 def create_sliding_windows_from_csv(
     csv_path,
-    window_size=20,
-    stride=5,
+    window_size=100,
+    stride=50,
     save_output=False,
     output_dir='sliding_windows_data'
 ):

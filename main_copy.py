@@ -5,7 +5,6 @@ import pickle
 import time
 from concurrent.futures import ThreadPoolExecutor
 import threading
-import sliding_windows
 import sliding_windows_SMD
 from Preprocessing.goldstein_uchida_preprocess import preprocess_goldstein_uchida
 from Preprocessing.ccpp_preprocess import preprocess_ccpp
