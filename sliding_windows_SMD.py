@@ -61,5 +61,7 @@ def create_sliding_windows_from_csv(
         X_windows.to_numpy().tofile(f"{output_dir}/{base}_windows.npy")
         with open(f"{output_dir}/{base}_mapping.pkl", "wb") as f:
             pickle.dump(mapping, f)
+            
+    print(X_windows.shape)
 
     return X_windows, mapping, window_size

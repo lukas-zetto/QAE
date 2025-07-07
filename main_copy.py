@@ -6,8 +6,8 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import sliding_windows_SMD
-from Preprocessing.goldstein_uchida_preprocess import preprocess_goldstein_uchida
-from Preprocessing.ccpp_preprocess import preprocess_ccpp
+# from Preprocessing.goldstein_uchida_preprocess import preprocess_goldstein_uchida
+# from Preprocessing.ccpp_preprocess import preprocess_ccpp
 from data_bucketing import perform_bucketing
 import feature_selection_MTS
 from Embedding.range_amplitude_enc import create_amplitude_encoding_circuit
