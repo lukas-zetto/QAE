@@ -14,7 +14,7 @@ from Embedding.range_amplitude_enc import create_amplitude_encoding_circuit
 # from Ansatzes.ry_cx_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
 
 #from Ansatzes.rx_rz_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
-from Ansatzes.Ansatz_19 import create_encoder_decoder_circuit, update_circuit_parameters
+from Ansatzes.Ansatz_19_tt import create_encoder_decoder_circuit, update_circuit_parameters
 
 
 # from Ansatzes.ry_rz_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
