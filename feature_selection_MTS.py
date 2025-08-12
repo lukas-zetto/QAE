@@ -41,7 +41,7 @@ def select_features(data, num_qubits, strategy='b'):
 
     # Assume data shape: (samples, features), features = f * w
     f = 5 # set number of sensors
-    w = 100# set number of time steps
+    w = 20# set number of time steps
     
 
     if strategy == 'a':

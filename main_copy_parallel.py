@@ -227,24 +227,39 @@ def main():
     decoder_option = args.decoder_option
     num_threads = args.num_threads
     slurm_id = args.slurm_id
-    num_iterations = 500
+    num_iterations = 1000
     num_bucketruns = 1
     target_proportion = 0.50
     anomaly_likelihood_per_bucket = 0.98 #######todo
 
-
     slurm_id_to_iterations = {
-    1: 100,
-    2: 300,
-    3: 400,
-    4: 1200
+    1: 5,
+    2: 10,
+    3: 15,
+    4: 20,
+    5: 25,
+    6: 30,
+    7: 35,
+    8: 50,
 }
+
+#     slurm_id_to_iterations = {
+#     1: 100,
+#     2: 200,
+#     3: 300,
+#     4: 400,
+#     5: 500,
+#     6: 600,
+#     7: 700,
+#     8: 800,
+#     9: 900,
+#     10: 1000
+# }
 
     if slurm_id not in slurm_id_to_iterations:
         raise ValueError(f"Unknown SLURM ID {slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
 
-    num_iterations = slurm_id_to_iterations[slurm_id]
-
+    # num_iterations = slurm_id_to_iterations[slurm_id]
 
 
     start_time = time.time()
@@ -254,7 +269,7 @@ def main():
 
     #Preprocess the data
     # preprocessed_data, high_risk_indices, _ = preprocess_goldstein_uchida(file_path)
-    windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path)
+    windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], 5)
     preprocessed_data = windwows_info[0]
     
     print(f"Initial dataset size: {len(preprocessed_data)}")
