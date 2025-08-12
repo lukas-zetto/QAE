@@ -19,7 +19,7 @@
 # 
 # expected memory requirements
 #SBATCH --mem=1000MB
-#SBATCH --array=1,2,3,4
+#SBATCH --array=1-8
 #
 
 OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
