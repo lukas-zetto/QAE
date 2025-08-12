@@ -312,9 +312,9 @@ def main():
     print(f"Total execution time: {execution_time:.2f} seconds")
     
     os.makedirs("results", exist_ok=True)
-    with open(f'results/ensemble_res_{num_iterations}.pkl', 'wb') as f:
+    with open(f'results/ensemble_res_{slurm_id}.pkl', 'wb') as f:
         pickle.dump(all_results, f)
-    print(f"Results saved to ensemble_res_{num_iterations}.pkl")
+    print(f"Results saved to ensemble_res_{slurm_id}.pkl")
 
 if __name__ == "__main__":
     main()
