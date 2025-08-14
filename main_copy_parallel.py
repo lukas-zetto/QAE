@@ -134,7 +134,7 @@ def configure_noisy_simulator(num_qubits):
     
     return simulator
 
-def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, stride, ansatz):
+def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, ansatz, stride):
     """
     Process a single iteration of the quantum autoencoder optimization.
 
@@ -368,8 +368,8 @@ def main():
                 num_iterations,
                 num_bucketruns,  # Add this new parameter
                 window_size,
+                ansatz,
                 stride,
-                ansatz
             )
             futures.append(future)
 
