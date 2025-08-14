@@ -23,7 +23,15 @@
 #
 
 OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
-python main_copy.py_parallel 4 1 --num_threads 8 --slurm_id ${SLURM_ARRAY_TASK_ID}
-
+python main_copy_parallel.py \
+    4 \
+    1 \
+    --num_threads 8 \
+    --slurm_id ${SLURM_ARRAY_TASK_ID} \
+    --window_size 20 \
+    --stride 5 \
+    --num_iterations 500 \
+    --tester window_size \
+    --ansatz 1
 # Done
 exit 0

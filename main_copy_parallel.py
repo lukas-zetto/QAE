@@ -12,7 +12,22 @@ from data_bucketing import perform_bucketing
 import feature_selection_MTS
 from Embedding.range_amplitude_enc import create_amplitude_encoding_circuit
 # from Ansatzes.ry_cx_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
-from Ansatzes.rx_rz_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
+from Ansatzes.rx_rz_ansatz import (
+    create_encoder_decoder_circuit as create_encoder_decoder_circuit_rx_rz,
+    update_circuit_parameters as update_circuit_parameters_rx_rz
+)
+
+from Ansatzes.Ansatz_19_tt import (
+    create_encoder_decoder_circuit as create_encoder_decoder_circuit_19_tt,
+    update_circuit_parameters as update_circuit_parameters_19_tt
+)
+
+from Ansatzes.Ansatz_19 import (
+    create_encoder_decoder_circuit as create_encoder_decoder_circuit_19,
+    update_circuit_parameters as update_circuit_parameters_19
+)
+
+
 # from Ansatzes.ry_rz_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
 from swap_test_circuit import create_swap_test_circuit
 from qiskit_aer import AerSimulator
@@ -27,6 +42,11 @@ def parse_arguments():
     parser.add_argument("--num_threads", type=int, default=4, help="Number of threads to use")
     
     parser.add_argument("--slurm_id", type=int, default=1, help="SLURM array task ID (used to select iteration count)")
+    parser.add_argument("--window_size", type=int, default=20, help="")
+    parser.add_argument("--stride", type=int, default=5, help="")
+    parser.add_argument("--num_iterations", type=int, default=500, help="")
+    parser.add_argument("--tester", type=str, default=None)
+    parser.add_argument("--ansatz", type=int, default=1)
 
     return parser.parse_args()
 
@@ -114,7 +134,7 @@ def configure_noisy_simulator(num_qubits):
     
     return simulator
 
-def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns):
+def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, stride):
     """
     Process a single iteration of the quantum autoencoder optimization.
 
@@ -150,7 +170,7 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
     print(f"Bucket size: {bucket_size}")
 
     # Run feature selection on the data to select features for amplitude encoding
-    selected_data, selected_features = feature_selection_MTS.select_features(preprocessed_data, num_qubits, strategy='b')
+    selected_data, selected_features = feature_selection_MTS.select_features(preprocessed_data, num_qubits, window_size, stride,  strategy='b')
     
     print(f"Number of features selected: {len(selected_features)}")
     print("Selected features:", selected_features)
@@ -165,8 +185,25 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
     print(f"Created amplitude encoding circuits for {len(amplitude_encoding_circuits)} datapoints")
 
     # Create the "encoder-decoder" ansatz
-    ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option)
+    match ansatz:
+        case 1:
+            ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_rx_rz(
+                num_qubits, compression_level, decoder_option
+            )
 
+        case 2:
+            ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19(
+                num_qubits, compression_level, decoder_option
+            )
+
+        case 3:
+            ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19_tt(
+                num_qubits, compression_level, decoder_option
+            )
+
+        case _:
+            raise ValueError(f"Unknown ansatz_choice: {ansatz}")
+    
     # Run random angle iterations for each bucket
     iteration_results = []
     for bucket_idx, bucket in enumerate(buckets):
@@ -180,8 +217,23 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
             else:
                 random_angles = np.random.uniform(0, 2*np.pi, len(encoder_params) + len(decoder_params))
             
-            random_ansatz = update_circuit_parameters(ansatz, encoder_params, decoder_params, random_angles)
-            # Run the circuit for each datapoint in the bucket
+            match ansatz:
+                case 1:
+                    random_ansatz = update_circuit_parameters_rx_rz(
+                        ansatz, encoder_params, decoder_params, random_angles
+                    )
+                case 2:
+                    random_ansatz = update_circuit_parameters_19(
+                        ansatz, encoder_params, decoder_params, random_angles
+                    )
+                case 3:
+                    random_ansatz = update_circuit_parameters_19_tt(
+                        ansatz, encoder_params, decoder_params, random_angles
+                    )
+                case _:
+                    raise ValueError(f"Unknown ansatz_choice: {ansatz}")
+        
+        # Run the circuit for each datapoint in the bucket
             for idx in bucket:
                 # print('here',bucket_idx, idx)
                 full_circuit = amplitude_encoding_circuits[idx].compose(random_ansatz).compose(swap_test)
@@ -223,16 +275,22 @@ def main():
     None
     """
     args = parse_arguments()
+    tester = args.test
     num_qubits = args.num_qubits
     decoder_option = args.decoder_option
     num_threads = args.num_threads
     slurm_id = args.slurm_id
-    num_iterations = 1000
+    num_iterations = args.num_iterations
     num_bucketruns = 1
     target_proportion = 0.50
     anomaly_likelihood_per_bucket = 0.98 #######todo
+    
+    window_size = args.window_size
+    stride = args.stride
+    aansatz = args.ansatz
 
-    slurm_id_to_iterations = {
+
+    slurm_id_to_window_size = {
     1: 5,
     2: 10,
     3: 15,
@@ -243,19 +301,34 @@ def main():
     8: 50,
 }
 
-#     slurm_id_to_iterations = {
-#     1: 100,
-#     2: 200,
-#     3: 300,
-#     4: 400,
-#     5: 500,
-#     6: 600,
-#     7: 700,
-#     8: 800,
-#     9: 900,
-#     10: 1000
-# }
+    slurm_id_to_iterations = {
+    1: 100,
+    2: 200,
+    3: 300,
+    4: 400,
+    5: 500,
+    6: 600,
+    7: 700,
+    8: 800,
+    9: 900,
+    10: 1000
+}
+    
+    
+    match tester:
+        case "iterations":
+            num_iterations = slurm_id_to_iterations.get(slurm_id, None)
+            print(f"num_iterations = {num_iterations}")
 
+        case "window size":
+            window_size = slurm_id_to_window_size.get(slurm_id, None)
+            print(f"window_size = {window_size}")
+
+        case _:
+            print("Unknown tester type.")        
+        
+            
+        
     if slurm_id not in slurm_id_to_iterations:
         raise ValueError(f"Unknown SLURM ID {slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
 
@@ -269,7 +342,9 @@ def main():
 
     #Preprocess the data
     # preprocessed_data, high_risk_indices, _ = preprocess_goldstein_uchida(file_path)
-    windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], 5)
+    
+    windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, window_size, stride)
+    # windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], stride)
     preprocessed_data = windwows_info[0]
     
     print(f"Initial dataset size: {len(preprocessed_data)}")
@@ -296,7 +371,9 @@ def main():
                 target_proportion,
                 anomaly_likelihood_per_bucket,
                 num_iterations,
-                num_bucketruns  # Add this new parameter
+                num_bucketruns,  # Add this new parameter
+                window_size,
+                stride
             )
             futures.append(future)
 

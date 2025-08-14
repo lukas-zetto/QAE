@@ -23,7 +23,7 @@ def sensor_selector(target_features, f, w):
     return sorted(list(selected_indices))[:target_features]  
 
 
-def select_features(data, num_qubits, strategy='b'):
+def select_features(data, num_qubits, num_features, window_size, strategy='b'):
     """
     Select features based on the specified strategy.
     
@@ -36,7 +36,7 @@ def select_features(data, num_qubits, strategy='b'):
     pd.DataFrame: Data with selected features (including added 0-features if necessary)
     list: Indices of selected features
     """
-    num_features = 2**num_qubits - 1 
+    num_features_selected = 2**num_qubits - 1 
     original_num_features = data.shape[1]
 
     # Assume data shape: (samples, features), features = f * w
@@ -45,10 +45,10 @@ def select_features(data, num_qubits, strategy='b'):
     
 
     if strategy == 'a':
-        indices = sensor_selector(num_features, f, w)
+        indices = sensor_selector(num_features_selected, num_features, window_size)
         selected_data = data.iloc[:, indices]
     elif strategy == 'b':
-        indices = time_selector(num_features, f, w)
+        indices = time_selector(num_features_selected, num_features, window_size)
         selected_data = data.iloc[:, indices]
 
 
