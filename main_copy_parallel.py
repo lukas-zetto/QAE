@@ -214,20 +214,20 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
             else:
                 random_angles = np.random.uniform(0, 2*np.pi, len(encoder_params) + len(decoder_params))
             
-            if ansatz == 1:
+            if ansatz_choice == 1:
                 random_ansatz = update_circuit_parameters_rx_rz(
                 ansatz, encoder_params, decoder_params, random_angles
             )
-            elif ansatz == 2:
+            elif ansatz_choice == 2:
                 random_ansatz = update_circuit_parameters_19(
                 ansatz, encoder_params, decoder_params, random_angles
             )
-            elif ansatz == 3:
+            elif ansatz_choice == 3:
                 random_ansatz = update_circuit_parameters_19_tt(
                 ansatz, encoder_params, decoder_params, random_angles
             )
             else:
-                raise ValueError(f"Unknown ansatz_choice: {ansatz}")
+                raise ValueError(f"Unknown ansatz_choice: {ansatz_choice}")
 
         
         # Run the circuit for each datapoint in the bucket
@@ -284,7 +284,7 @@ def main():
     
     window_size = args.window_size
     stride = args.stride
-    ansatz = args.ansatz
+    ansatz_choice = args.ansatz_choice
 
 
     slurm_id_to_window_size = {
@@ -315,7 +315,7 @@ def main():
     if tester == "iterations":
         num_iterations = slurm_id_to_iterations.get(slurm_id, None)
         print(f"num_iterations = {num_iterations}")
-    elif tester == "window size":
+    elif tester == "window_size":
         window_size = slurm_id_to_window_size.get(slurm_id, None)
         print(f"window_size = {window_size}")
     else:
@@ -368,7 +368,7 @@ def main():
                 num_iterations,
                 num_bucketruns,  # Add this new parameter
                 window_size,
-                ansatz,
+                ansatz_choice,
                 stride,
             )
             futures.append(future)
