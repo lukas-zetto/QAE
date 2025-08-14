@@ -46,7 +46,7 @@ def parse_arguments():
     parser.add_argument("--stride", type=int, default=5, help="")
     parser.add_argument("--num_iterations", type=int, default=500, help="")
     parser.add_argument("--test", type=str, default=None)
-    parser.add_argument("--ansatz", type=int, default=1)
+    parser.add_argument("--ansatz_choice", type=int, default=1)
 
     return parser.parse_args()
 
@@ -134,7 +134,7 @@ def configure_noisy_simulator(num_qubits):
     
     return simulator
 
-def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, ansatz, stride):
+def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, ansatz_choice, stride):
     """
     Process a single iteration of the quantum autoencoder optimization.
 
@@ -185,20 +185,20 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
     print(f"Created amplitude encoding circuits for {len(amplitude_encoding_circuits)} datapoints")
 
     # Create the "encoder-decoder" ansatz
-    if ansatz == 1:
+    if ansatz_choice == 1:
         ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_rx_rz(
         num_qubits, compression_level, decoder_option
     )
-    elif ansatz == 2:
+    elif ansatz_choice == 2:
         ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19(
         num_qubits, compression_level, decoder_option
     )
-    elif ansatz == 3:
+    elif ansatz_choice == 3:
         ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19_tt(
         num_qubits, compression_level, decoder_option
     )
     else:
-        raise ValueError(f"Unknown ansatz_choice: {ansatz}")
+        raise ValueError(f"Unknown ansatz_choice: {ansatz_choice}")
 
     
     # Run random angle iterations for each bucket
