@@ -45,10 +45,10 @@ def select_features(data, num_qubits, window_size, strategy='b'):
     
 
     if strategy == 'a':
-        indices = sensor_selector(num_features_selected, num_features, window_size)
+        indices = sensor_selector(num_features_selected, f, window_size)
         selected_data = data.iloc[:, indices]
     elif strategy == 'b':
-        indices = time_selector(num_features_selected, num_features, window_size)
+        indices = time_selector(num_features_selected, f, window_size)
         selected_data = data.iloc[:, indices]
 
 
