@@ -45,7 +45,7 @@ def parse_arguments():
     parser.add_argument("--window_size", type=int, default=20, help="")
     parser.add_argument("--stride", type=int, default=5, help="")
     parser.add_argument("--num_iterations", type=int, default=500, help="")
-    parser.add_argument("--tester", type=str, default=None)
+    parser.add_argument("--test", type=str, default=None)
     parser.add_argument("--ansatz", type=int, default=1)
 
     return parser.parse_args()
