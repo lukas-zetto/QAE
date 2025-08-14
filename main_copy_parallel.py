@@ -185,24 +185,21 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
     print(f"Created amplitude encoding circuits for {len(amplitude_encoding_circuits)} datapoints")
 
     # Create the "encoder-decoder" ansatz
-    match ansatz:
-        case 1:
-            ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_rx_rz(
-                num_qubits, compression_level, decoder_option
-            )
+    if ansatz == 1:
+        ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_rx_rz(
+        num_qubits, compression_level, decoder_option
+    )
+    elif ansatz == 2:
+        ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19(
+        num_qubits, compression_level, decoder_option
+    )
+    elif ansatz == 3:
+        ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19_tt(
+        num_qubits, compression_level, decoder_option
+    )
+    else:
+        raise ValueError(f"Unknown ansatz_choice: {ansatz}")
 
-        case 2:
-            ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19(
-                num_qubits, compression_level, decoder_option
-            )
-
-        case 3:
-            ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19_tt(
-                num_qubits, compression_level, decoder_option
-            )
-
-        case _:
-            raise ValueError(f"Unknown ansatz_choice: {ansatz}")
     
     # Run random angle iterations for each bucket
     iteration_results = []
@@ -217,21 +214,21 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
             else:
                 random_angles = np.random.uniform(0, 2*np.pi, len(encoder_params) + len(decoder_params))
             
-            match ansatz:
-                case 1:
-                    random_ansatz = update_circuit_parameters_rx_rz(
-                        ansatz, encoder_params, decoder_params, random_angles
-                    )
-                case 2:
-                    random_ansatz = update_circuit_parameters_19(
-                        ansatz, encoder_params, decoder_params, random_angles
-                    )
-                case 3:
-                    random_ansatz = update_circuit_parameters_19_tt(
-                        ansatz, encoder_params, decoder_params, random_angles
-                    )
-                case _:
-                    raise ValueError(f"Unknown ansatz_choice: {ansatz}")
+            if ansatz == 1:
+                random_ansatz = update_circuit_parameters_rx_rz(
+                ansatz, encoder_params, decoder_params, random_angles
+            )
+            elif ansatz == 2:
+                random_ansatz = update_circuit_parameters_19(
+                ansatz, encoder_params, decoder_params, random_angles
+            )
+            elif ansatz == 3:
+                random_ansatz = update_circuit_parameters_19_tt(
+                ansatz, encoder_params, decoder_params, random_angles
+            )
+            else:
+                raise ValueError(f"Unknown ansatz_choice: {ansatz}")
+
         
         # Run the circuit for each datapoint in the bucket
             for idx in bucket:
@@ -299,7 +296,7 @@ def main():
     6: 30,
     7: 35,
     8: 50,
-}
+    }
 
     slurm_id_to_iterations = {
     1: 100,
@@ -312,20 +309,18 @@ def main():
     8: 800,
     9: 900,
     10: 1000
-}
+    }
     
     
-    match tester:
-        case "iterations":
-            num_iterations = slurm_id_to_iterations.get(slurm_id, None)
-            print(f"num_iterations = {num_iterations}")
+    if tester == "iterations":
+        num_iterations = slurm_id_to_iterations.get(slurm_id, None)
+        print(f"num_iterations = {num_iterations}")
+    elif tester == "window size":
+        window_size = slurm_id_to_window_size.get(slurm_id, None)
+        print(f"window_size = {window_size}")
+    else:
+        print("Unknown tester type.")
 
-        case "window size":
-            window_size = slurm_id_to_window_size.get(slurm_id, None)
-            print(f"window_size = {window_size}")
-
-        case _:
-            print("Unknown tester type.")        
         
             
         
