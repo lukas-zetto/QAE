@@ -23,7 +23,7 @@ def sensor_selector(target_features, f, w):
     return sorted(list(selected_indices))[:target_features]  
 
 
-def select_features(data, num_qubits, num_features, window_size, strategy='b'):
+def select_features(data, num_qubits, window_size, strategy='b'):
     """
     Select features based on the specified strategy.
     
