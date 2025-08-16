@@ -278,7 +278,7 @@ def main():
     num_threads = args.num_threads
     slurm_id = args.slurm_id
     num_iterations = args.num_iterations
-    num_bucketruns = 1
+    num_bucketruns = 1  
     target_proportion = 0.50
     anomaly_likelihood_per_bucket = 0.98 #######todo
     

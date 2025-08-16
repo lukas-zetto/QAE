@@ -31,7 +31,7 @@ python main_copy_parallel.py \
     --window_size 20 \
     --stride 5 \
     --num_iterations 500 \
-    --tester window_size \
+    --test window_size \
     --ansatz 1
 # Done
 exit 0
