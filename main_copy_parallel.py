@@ -6,10 +6,12 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import sliding_windows
+import sliding_windows_SMD
 from Preprocessing.goldstein_uchida_preprocess import preprocess_goldstein_uchida
 from Preprocessing.ccpp_preprocess import preprocess_ccpp
 from data_bucketing import perform_bucketing
 import feature_selection_MTS
+import feature_selection
 from Embedding.range_amplitude_enc import create_amplitude_encoding_circuit
 # from Ansatzes.ry_cx_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
 from Ansatzes.rx_rz_ansatz import (
@@ -47,6 +49,9 @@ def parse_arguments():
     parser.add_argument("--num_iterations", type=int, default=500, help="")
     parser.add_argument("--test", type=str, default=None)
     parser.add_argument("--ansatz_choice", type=int, default=1)
+    parser.add_argument("--fs", type=int, default=1)
+    parser.add_argument("--dataset", type=int, default="SKAB")
+
 
     return parser.parse_args()
 
@@ -134,7 +139,7 @@ def configure_noisy_simulator(num_qubits):
     
     return simulator
 
-def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, ansatz_choice, stride):
+def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, swap_test, simulator, target_proportion, anomaly_likelihood_per_bucket, num_iterations, num_bucketruns, window_size, ansatz_choice, fs, stride):
     """
     Process a single iteration of the quantum autoencoder optimization.
 
@@ -170,7 +175,11 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
     print(f"Bucket size: {bucket_size}")
 
     # Run feature selection on the data to select features for amplitude encoding
-    selected_data, selected_features = feature_selection_MTS.select_features(preprocessed_data, num_qubits, window_size,  strategy='b')
+    if (fs == 1):
+        selected_data, selected_features = feature_selection_MTS.select_features(preprocessed_data, num_qubits, window_size,  strategy='b')
+    elif (fs == 2):
+        selected_data, selected_features = feature_selection.select_features(preprocessed_data, num_qubits, strategy='e')
+
     
     print(f"Number of features selected: {len(selected_features)}")
     print("Selected features:", selected_features)
@@ -282,9 +291,11 @@ def main():
     target_proportion = 0.50
     anomaly_likelihood_per_bucket = 0.98 #######todo
     
+    dataset = args.dataset
     window_size = args.window_size
     stride = args.stride
     ansatz_choice = args.ansatz_choice
+    fs = 1
 
 
     slurm_id_to_window_size = {
@@ -317,7 +328,9 @@ def main():
         print(f"num_iterations = {num_iterations}")
     elif tester == "window_size":
         window_size = slurm_id_to_window_size.get(slurm_id, None)
-        print(f"window_size = {window_size}")
+        print(f"window_size = {window_size}")       
+    elif tester == "ogfts":
+        fs = 2
     else:
         print("Unknown tester type.")
 
@@ -338,7 +351,11 @@ def main():
     #Preprocess the data
     # preprocessed_data, high_risk_indices, _ = preprocess_goldstein_uchida(file_path)
     
-    windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, window_size, stride)
+    if dataset == "SKAB":
+        windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, window_size, stride)
+    elif dataset == "SMD":
+        windwows_info = sliding_windows_SMD.create_sliding_windows_from_csv(file_path)
+
     # windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], stride)
     preprocessed_data = windwows_info[0]
     
@@ -369,6 +386,7 @@ def main():
                 num_bucketruns,  # Add this new parameter
                 window_size,
                 ansatz_choice,
+                fs,
                 stride,
             )
             futures.append(future)
