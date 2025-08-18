@@ -50,7 +50,7 @@ def parse_arguments():
     parser.add_argument("--test", type=str, default=None)
     parser.add_argument("--ansatz_choice", type=int, default=1)
     parser.add_argument("--fs", type=int, default=1)
-    parser.add_argument("--dataset", type=int, default="SKAB")
+    parser.add_argument("--dataset", type=str, default="SKAB")
 
 
     return parser.parse_args()
