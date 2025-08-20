@@ -350,7 +350,7 @@ def main():
     if dataset == "SKAB":
         windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, window_size, stride)
     elif dataset == "SMD":
-        file_path = './Data/Goldstein_Uchida_datasets/breast-cancer-unsupervised-ad.csv'
+        file_path = './Data/filtered_5_features.csv'
         windwows_info = sliding_windows_SMD.create_sliding_windows_from_csv(file_path)
 
     # windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], stride)
