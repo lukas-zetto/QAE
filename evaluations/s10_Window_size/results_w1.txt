@@ -1,0 +1,27 @@
+Window 5 - Score: 0.9156
+Window 6 - Score: 0.9008
+Window 9 - Score: 0.9096
+Window 11 - Score: 0.9101
+Window 12 - Score: 0.8958
+Window 13 - Score: 0.9428
+Window 14 - Score: 0.8985
+Window 47 - Score: 0.8868
+Window 55 - Score: 0.9183
+Window 56 - Score: 0.9722
+Window 57 - Score: 0.8978
+Window 58 - Score: 0.8933
+Window 59 - Score: 0.8990
+Window 60 - Score: 0.9394
+Window 61 - Score: 0.9375
+Window 62 - Score: 0.9197
+Window 64 - Score: 0.9233
+Window 67 - Score: 0.9372
+Window 69 - Score: 0.9048
+Window 72 - Score: 0.9064
+
+True Positives: 11
+False Positives: 9
+False Negatives: 9
+Precision: 55.00%
+Recall: 55.00%
+F1 Score: 55.00%

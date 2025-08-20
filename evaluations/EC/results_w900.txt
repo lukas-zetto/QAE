@@ -1,6 +1,9 @@
+Window 6 - Score: 0.8575
+Window 8 - Score: 0.8568
 Window 9 - Score: 0.8636
 Window 10 - Score: 0.8677
 Window 18 - Score: 0.8681
+Window 22 - Score: 0.8489
 Window 89 - Score: 0.8676
 Window 106 - Score: 0.8737
 Window 107 - Score: 0.8771
@@ -35,11 +38,15 @@ Window 135 - Score: 0.8833
 Window 136 - Score: 0.8919
 Window 137 - Score: 0.9088
 Window 138 - Score: 0.8826
+Window 139 - Score: 0.8547
 Window 140 - Score: 0.8785
+Window 141 - Score: 0.8563
+Window 142 - Score: 0.8545
+Window 143 - Score: 0.8583
 
-True Positives: 29
-False Positives: 9
-False Negatives: 11
-Precision: 76.32%
-Recall: 72.50%
-F1 Score: 74.36%
+True Positives: 38
+False Positives: 7
+False Negatives: 8
+Precision: 84.44%
+Recall: 82.61%
+F1 Score: 83.52%

@@ -335,10 +335,6 @@ def main():
         print("Unknown tester type.")
 
         
-            
-        
-    if slurm_id not in slurm_id_to_iterations:
-        raise ValueError(f"Unknown SLURM ID {slurm_id}. Expected one of: {list(slurm_id_to_iterations.keys())}")
 
     # num_iterations = slurm_id_to_iterations[slurm_id]
 
@@ -354,6 +350,7 @@ def main():
     if dataset == "SKAB":
         windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, window_size, stride)
     elif dataset == "SMD":
+        file_path = './Data/Goldstein_Uchida_datasets/breast-cancer-unsupervised-ad.csv'
         windwows_info = sliding_windows_SMD.create_sliding_windows_from_csv(file_path)
 
     # windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], stride)
