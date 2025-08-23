@@ -1,76 +1,50 @@
-from qiskit import QuantumCircuit, QuantumRegister
-from qiskit.circuit import ParameterVector
+# quantum_autoencoder_fixed_ansatz_with_ancilla_v2.ipynb
+# Jupyter notebook to create and draw the 4-qubit fixed ansatz encoder-decoder quantum circuit with ancilla qubits and two RX-RZ layers
 
 from qiskit import QuantumCircuit, QuantumRegister
 from qiskit.circuit import ParameterVector
 
-from qiskit import QuantumCircuit, QuantumRegister
-from qiskit.circuit import ParameterVector
+# --- Functions ---
 
 def create_ansatz(num_qubits=4, param_prefix='θ'):
     """
-    Create fixed ansatz with two RX-RZ layers and CRX entanglement.
-    Total: 20 parameters (4 RX + 4 RZ + 4 RX + 4 RZ + 4 CRX)
-    
-    Returns:
-    - qc: QuantumCircuit
-    - params: ParameterVector with length 20
+    Fixed ansatz with two RX-RZ layers + CRX entanglement on total_qubits = 2*num_qubits + 1.
+    Total parameters: 20 (4 RX + 4 RZ + 4 RX + 4 RZ + 4 CRX)
     """
     if num_qubits != 4:
         raise ValueError("This ansatz is fixed for 4 qubits.")
 
-    total_params = 20  # 4 RX + 4 RZ + 4 RX + 4 RZ + 4 CRX
+    total_qubits = num_qubits * 2 + 1
+    total_params = 20
     params = ParameterVector(param_prefix, total_params)
-    
-    q = QuantumRegister(num_qubits, 'q')
+
+    q = QuantumRegister(total_qubits, 'q')
     qc = QuantumCircuit(q)
 
-    # First RX layer: params[0..3]
+    # Apply layers to original qubits (q_0..q_3)
     for i in range(num_qubits):
-        qc.rx(params[i], q[i])
+        qc.rx(params[i], q[i])           # RX layer 1
+        qc.rz(params[4 + i], q[i])       # RZ layer 1
+        qc.rx(params[8 + i], q[i])       # RX layer 2
+        qc.rz(params[12 + i], q[i])      # RZ layer 2
 
-    # First RZ layer: params[4..7]
-    for i in range(num_qubits):
-        qc.rz(params[4 + i], q[i])
-
-    # Second RX layer: params[8..11]
-    for i in range(num_qubits):
-        qc.rx(params[8 + i], q[i])
-
-    # Second RZ layer: params[12..15]
-    for i in range(num_qubits):
-        qc.rz(params[12 + i], q[i])
-
-    # CRX layer: params[16..19]
-    crx_pairs = [
-        (3, 0),
-        (2, 3),
-        (1, 2),
-        (0, 1)
-    ]
+    # CRX entanglement
+    crx_pairs = [(3,0),(2,3),(1,2),(0,1)]
     for idx, (ctrl, targ) in enumerate(crx_pairs):
         qc.crx(params[16 + idx], q[ctrl], q[targ])
 
     return qc, params
 
 
-
 def create_reset_circuit(num_qubits, compression_level):
-    """
-    Create a circuit that resets qubits from compression_level to num_qubits - 1.
-    """
-    reset_circuit = QuantumCircuit(num_qubits)
+    total_qubits = num_qubits * 2 + 1
+    reset_circuit = QuantumCircuit(total_qubits)
     for qubit in range(compression_level, num_qubits):
         reset_circuit.reset(qubit)
     return reset_circuit
 
-def create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option):
-    """
-    Create a complete encoder-decoder circuit using the structured ansatz.
-    """
-    if compression_level < 1 or compression_level > num_qubits:
-        raise ValueError(f"Compression level must be between 1 and {num_qubits}")
 
+def create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option):
     encoder, encoder_params = create_ansatz(num_qubits, param_prefix='θ_enc')
     reset_circuit = create_reset_circuit(num_qubits, compression_level)
 
@@ -88,41 +62,26 @@ def create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option
     else:
         raise ValueError("Invalid decoder option. Choose 1 for inverse() or 2 for manual decoder.")
 
+
 def update_circuit_parameters(circuit, encoder_params, decoder_params, new_angles):
     param_dict = {}
-
     encoder_flat = list(encoder_params)
     num_encoder_params = len(encoder_flat)
-
     param_dict.update(dict(zip(encoder_flat, new_angles[:num_encoder_params])))
 
     if decoder_params is not None:
         decoder_flat = list(decoder_params)
         param_dict.update(dict(zip(decoder_flat, new_angles[num_encoder_params:])))
-    else:
-        decoder_flat = []
 
     bound_circuit = circuit.assign_parameters(param_dict)
-
     return bound_circuit
 
+# --- Create and draw the circuit ---
+num_qubits = 4
+compression_level = 2
+decoder_option = 1
 
-    # """
-    # Update the circuit with new angles for encoder and decoder.
-    # """
-    # param_dict = {}
+circuit, enc_params, dec_params = create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option)
 
-    # encoder_flat = []
-    # for vec in encoder_params.values():
-    #     encoder_flat.extend(vec)
-    # num_encoder_params = len(encoder_flat)
-    # param_dict.update(dict(zip(encoder_flat, new_angles[:num_encoder_params])))
-
-    # if decoder_params is not None:
-    #     decoder_flat = []
-    #     for vec in decoder_params.values():
-    #         decoder_flat.extend(vec)
-    #     param_dict.update(dict(zip(decoder_flat, new_angles[num_encoder_params:])))
-
-    # bound_circuit = circuit.assign_parameters(param_dict)
-    # return bound_circuit
+# Draw circuit in ASCII for Jupyter
+print(circuit.draw('text'))
