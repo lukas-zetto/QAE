@@ -334,9 +334,6 @@ def main():
     else:
         print("Unknown tester type.")
 
-        
-
-    # num_iterations = slurm_id_to_iterations[slurm_id]
 
 
     start_time = time.time()
@@ -351,6 +348,9 @@ def main():
         windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, window_size, stride)
     elif dataset == "SMD":
         file_path = './Data/filtered_5_features.csv'
+        windwows_info = sliding_windows_SMD.create_sliding_windows_from_csv(file_path)
+    elif dataset  == "SMD2":
+        file_path = './Data/filtered_5_features_2.csv'
         windwows_info = sliding_windows_SMD.create_sliding_windows_from_csv(file_path)
 
     # windwows_info = sliding_windows.create_sliding_windows_from_csv(file_path, slurm_id_to_iterations[slurm_id], stride)
