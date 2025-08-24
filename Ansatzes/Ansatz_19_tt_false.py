@@ -1,8 +1,5 @@
-# quantum_autoencoder_fixed_ansatz_with_ancilla.ipynb
-# Jupyter notebook to create and draw a 4-qubit fixed ansatz encoder-decoder quantum circuit using Qiskit with ancilla qubits
-
-# Install Qiskit if not already installed
-# !pip install qiskit
+# quantum_autoencoder_fixed_ansatz_with_ancilla_v2.ipynb
+# Jupyter notebook to create and draw the 4-qubit fixed ansatz encoder-decoder quantum circuit with ancilla qubits and two RX-RZ layers
 
 from qiskit import QuantumCircuit, QuantumRegister
 from qiskit.circuit import ParameterVector
@@ -11,29 +8,30 @@ from qiskit.circuit import ParameterVector
 
 def create_ansatz(num_qubits=4, param_prefix='θ'):
     """
-    Fixed 4-qubit ansatz with ancilla qubits included.
-    Returns a circuit acting on total_qubits = 2*num_qubits + 1.
+    Fixed ansatz with two RX-RZ layers + CRX entanglement on total_qubits = 2*num_qubits + 1.
+    Total parameters: 20 (4 RX + 4 RZ + 4 RX + 4 RZ + 4 CRX)
     """
     if num_qubits != 4:
         raise ValueError("This ansatz is fixed for 4 qubits.")
 
     total_qubits = num_qubits * 2 + 1
-    total_params = 12  # 4 RX + 4 RZ + 4 CRX
+    total_params = 20
     params = ParameterVector(param_prefix, total_params)
 
     q = QuantumRegister(total_qubits, 'q')
     qc = QuantumCircuit(q)
 
-    # Apply RX rotations on original qubits (q_0..q_3)
+    # Apply layers to original qubits (q_0..q_3)
     for i in range(num_qubits):
-        qc.rx(params[i], q[i])
-    # Apply RZ rotations on original qubits (q_0..q_3)
-    for i in range(num_qubits):
-        qc.rz(params[4 + i], q[i])
-    # CRX gates between original qubits
+        qc.rx(params[i], q[i])           # RX layer 1
+        qc.rz(params[4 + i], q[i])       # RZ layer 1
+        qc.rx(params[8 + i], q[i])       # RX layer 2
+        qc.rz(params[12 + i], q[i])      # RZ layer 2
+
+    # CRX entanglement
     crx_pairs = [(3,0),(2,3),(1,2),(0,1)]
     for idx, (ctrl, targ) in enumerate(crx_pairs):
-        qc.crx(params[8 + idx], q[ctrl], q[targ])
+        qc.crx(params[16 + idx], q[ctrl], q[targ])
 
     return qc, params
 
@@ -47,9 +45,6 @@ def create_reset_circuit(num_qubits, compression_level):
 
 
 def create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option):
-    if compression_level < 1 or compression_level > num_qubits:
-        raise ValueError(f"Compression level must be between 1 and {num_qubits}")
-
     encoder, encoder_params = create_ansatz(num_qubits, param_prefix='θ_enc')
     reset_circuit = create_reset_circuit(num_qubits, compression_level)
 

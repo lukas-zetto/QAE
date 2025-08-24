@@ -1,50 +1,50 @@
-Window 7 - Score: 0.9330
-Window 8 - Score: 0.9332
-Window 9 - Score: 0.9596
-Window 10 - Score: 0.9477
-Window 11 - Score: 0.9100
-Window 12 - Score: 0.9135
-Window 13 - Score: 0.9000
-Window 14 - Score: 0.8752
-Window 16 - Score: 0.8889
-Window 17 - Score: 0.9208
-Window 18 - Score: 0.9164
-Window 19 - Score: 0.9051
-Window 20 - Score: 0.8917
-Window 21 - Score: 0.8915
-Window 22 - Score: 0.9010
-Window 23 - Score: 0.8906
-Window 24 - Score: 0.9189
-Window 25 - Score: 0.9454
-Window 27 - Score: 0.9147
-Window 28 - Score: 0.8790
-Window 108 - Score: 0.8742
-Window 116 - Score: 0.8809
-Window 118 - Score: 0.8750
-Window 120 - Score: 0.8831
-Window 121 - Score: 0.8827
-Window 123 - Score: 0.9047
-Window 124 - Score: 0.9174
-Window 125 - Score: 0.9037
-Window 126 - Score: 0.9691
-Window 127 - Score: 0.9248
-Window 128 - Score: 0.9263
-Window 129 - Score: 0.9082
-Window 130 - Score: 0.8810
-Window 131 - Score: 0.9023
-Window 132 - Score: 0.9481
-Window 133 - Score: 0.9690
-Window 134 - Score: 1.0042
-Window 135 - Score: 0.9327
-Window 136 - Score: 1.0032
-Window 137 - Score: 0.9422
-Window 138 - Score: 0.9095
-Window 139 - Score: 0.9450
-Window 140 - Score: 0.8915
+Window 5 - Score: 0.8779
+Window 6 - Score: 0.9017
+Window 7 - Score: 0.9408
+Window 8 - Score: 0.9720
+Window 9 - Score: 0.9729
+Window 10 - Score: 0.9471
+Window 11 - Score: 0.9216
+Window 12 - Score: 0.8864
+Window 13 - Score: 0.8802
+Window 14 - Score: 0.8679
+Window 15 - Score: 0.8864
+Window 16 - Score: 0.8749
+Window 17 - Score: 0.8857
+Window 18 - Score: 0.9161
+Window 19 - Score: 0.9257
+Window 20 - Score: 0.8786
+Window 21 - Score: 0.8877
+Window 23 - Score: 0.8891
+Window 24 - Score: 0.8927
+Window 25 - Score: 0.9057
+Window 26 - Score: 0.9047
+Window 27 - Score: 0.8900
+Window 28 - Score: 0.8932
+Window 119 - Score: 0.8719
+Window 121 - Score: 0.8975
+Window 123 - Score: 0.8758
+Window 124 - Score: 0.9101
+Window 125 - Score: 0.8930
+Window 126 - Score: 0.9005
+Window 127 - Score: 0.9542
+Window 128 - Score: 0.8927
+Window 129 - Score: 0.9094
+Window 130 - Score: 0.9146
+Window 131 - Score: 0.9087
+Window 132 - Score: 0.9301
+Window 133 - Score: 0.9546
+Window 134 - Score: 0.9920
+Window 135 - Score: 0.9516
+Window 136 - Score: 0.9922
+Window 137 - Score: 0.9316
+Window 138 - Score: 0.9614
+Window 139 - Score: 0.9548
+Window 140 - Score: 0.9060
 
-True Positives: 23
-False Positives: 20
-False Negatives: 21
-Precision: 53.49%
-Recall: 52.27%
-F1 Score: 52.87%
+True Positives: 20
+False Positives: 23
+False Negatives: 24
+Precision: 46.51%
+Recall: 45.45%
+F1 Score: 45.98%
