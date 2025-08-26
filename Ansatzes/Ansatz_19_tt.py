@@ -3,7 +3,7 @@ from qiskit.circuit import ParameterVector
 
 # --- Functions ---
 
-def create_ansatz_A19_double(num_qubits=4, param_prefix='θ'):
+def create_ansatz(num_qubits=4, param_prefix='θ'):
     """
     Double application of Circuit 19:
     Layer 1: RX + RZ + CRX
@@ -49,7 +49,7 @@ def create_reset_circuit(num_qubits, compression_level):
 
 
 def create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option):
-    encoder, encoder_params = create_ansatz_A19_double(num_qubits, param_prefix='θ_enc')
+    encoder, encoder_params = create_ansatz(num_qubits, param_prefix='θ_enc')
     reset_circuit = create_reset_circuit(num_qubits, compression_level)
 
     if decoder_option == 1:
@@ -58,10 +58,25 @@ def create_encoder_decoder_circuit(num_qubits, compression_level, decoder_option
         return complete_circuit, encoder_params, None
 
     elif decoder_option == 2:
-        decoder, decoder_params = create_ansatz_A19_double(num_qubits, param_prefix='θ_dec')
+        decoder, decoder_params = create_ansatz(num_qubits, param_prefix='θ_dec')
         decoder = decoder.reverse_ops()
         complete_circuit = encoder.compose(reset_circuit).compose(decoder)
         return complete_circuit, encoder_params, decoder_params
 
     else:
         raise ValueError("Invalid decoder option. Choose 1 for inverse() or 2 for manual decoder.")
+
+
+def update_circuit_parameters(circuit, encoder_params, decoder_params, new_angles):
+    param_dict = {}
+    encoder_flat = list(encoder_params)
+    num_encoder_params = len(encoder_flat)
+    param_dict.update(dict(zip(encoder_flat, new_angles[:num_encoder_params])))
+
+    if decoder_params is not None:
+        decoder_flat = list(decoder_params)
+        param_dict.update(dict(zip(decoder_flat, new_angles[num_encoder_params:])))
+
+    bound_circuit = circuit.assign_parameters(param_dict)
+    return bound_circuit
+
