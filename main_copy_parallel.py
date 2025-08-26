@@ -28,6 +28,10 @@ from Ansatzes.Ansatz_19 import (
     create_encoder_decoder_circuit as create_encoder_decoder_circuit_19,
     update_circuit_parameters as update_circuit_parameters_19
 )
+from Ansatzes.Ansatz_19_ttt import (
+    create_encoder_decoder_circuit as create_encoder_decoder_circuit_19,
+    update_circuit_parameters as update_circuit_parameters_19
+)
 
 
 # from Ansatzes.ry_rz_ansatz import create_encoder_decoder_circuit, update_circuit_parameters
@@ -206,6 +210,10 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
         ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19_tt(
         num_qubits, compression_level, decoder_option
     )
+    elif ansatz_choice == 4:
+        ansatz, encoder_params, decoder_params = create_encoder_decoder_circuit_19_ttt(
+        num_qubits, compression_level, decoder_option
+    )
     else:
         raise ValueError(f"Unknown ansatz_choice: {ansatz_choice}")
 
@@ -232,6 +240,10 @@ def process_iteration(iteration, num_qubits, decoder_option, preprocessed_data, 
                 ansatz, encoder_params, decoder_params, random_angles
             )
             elif ansatz_choice == 3:
+                random_ansatz = update_circuit_parameters_19_tt(
+                ansatz, encoder_params, decoder_params, random_angles
+            )
+            elif ansatz_choice == 4:
                 random_ansatz = update_circuit_parameters_19_tt(
                 ansatz, encoder_params, decoder_params, random_angles
             )
