@@ -1,0 +1,50 @@
+Window 7 - Score: 0.8659
+Window 8 - Score: 0.8909
+Window 9 - Score: 0.9000
+Window 10 - Score: 0.8938
+Window 11 - Score: 0.8770
+Window 17 - Score: 0.8690
+Window 18 - Score: 0.8592
+Window 19 - Score: 0.8685
+Window 25 - Score: 0.8633
+Window 107 - Score: 0.8621
+Window 108 - Score: 0.8935
+Window 109 - Score: 0.9240
+Window 110 - Score: 0.9454
+Window 111 - Score: 0.9002
+Window 112 - Score: 0.9395
+Window 113 - Score: 0.8904
+Window 114 - Score: 0.8859
+Window 115 - Score: 0.8918
+Window 116 - Score: 0.8660
+Window 117 - Score: 0.8731
+Window 118 - Score: 0.9364
+Window 119 - Score: 0.9143
+Window 120 - Score: 0.9017
+Window 121 - Score: 0.9035
+Window 122 - Score: 0.9262
+Window 123 - Score: 0.9135
+Window 124 - Score: 0.9052
+Window 125 - Score: 0.9285
+Window 126 - Score: 0.8591
+Window 127 - Score: 0.9176
+Window 128 - Score: 0.9045
+Window 129 - Score: 0.9080
+Window 130 - Score: 0.9284
+Window 131 - Score: 0.9280
+Window 132 - Score: 0.9397
+Window 133 - Score: 0.9307
+Window 134 - Score: 0.9201
+Window 135 - Score: 0.9251
+Window 136 - Score: 0.9687
+Window 137 - Score: 0.9248
+Window 138 - Score: 0.9316
+Window 139 - Score: 0.8952
+Window 140 - Score: 0.9047
+
+True Positives: 34
+False Positives: 9
+False Negatives: 10
+Precision: 79.07%
+Recall: 77.27%
+F1 Score: 78.16%
