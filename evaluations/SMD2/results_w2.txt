@@ -1,0 +1,40 @@
+Window 51 - Score: 0.9003
+Window 92 - Score: 0.9985
+Window 93 - Score: 1.0128
+Window 117 - Score: 0.9210
+Window 118 - Score: 1.1547
+Window 119 - Score: 1.0057
+Window 156 - Score: 0.9004
+Window 166 - Score: 0.9040
+Window 224 - Score: 0.8944
+Window 256 - Score: 0.8941
+Window 283 - Score: 0.8788
+Window 311 - Score: 1.0096
+Window 312 - Score: 0.9395
+Window 317 - Score: 0.8916
+Window 318 - Score: 1.0043
+Window 319 - Score: 0.8994
+Window 339 - Score: 0.9042
+Window 359 - Score: 0.9235
+Window 404 - Score: 1.0219
+Window 405 - Score: 0.9800
+Window 425 - Score: 0.8980
+Window 426 - Score: 0.8804
+Window 444 - Score: 0.9706
+Window 445 - Score: 1.2564
+Window 446 - Score: 1.0212
+Window 454 - Score: 0.9007
+Window 460 - Score: 0.9533
+Window 461 - Score: 0.9349
+Window 462 - Score: 0.8950
+
+True Positives: 18
+False Positives: 11
+False Negatives: 15
+True Negatives: 507
+Precision: 62.07%
+Recall: 54.55%
+F1 Score: 58.06%
+Accuracy: 95.28%
+Balanced Accuracy: 76.21%
+ROC AUC: 88.72%

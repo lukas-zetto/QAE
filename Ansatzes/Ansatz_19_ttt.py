@@ -5,16 +5,17 @@ from qiskit.circuit import ParameterVector
 
 def create_ansatz(num_qubits=4, param_prefix='θ'):
     """
-    Double application of Circuit 19:
+    Triple application of Circuit 19:
     Layer 1: RX + RZ + CRX
     Layer 2: RX + RZ + CRX
-    Total params = 16 (4 RX + 4 RZ + 4 CRX) * 2 = 24
+    Layer 3: RX + RZ + CRX
+    Total params = 12 * 3 = 36
     """
     if num_qubits != 4:
         raise ValueError("This ansatz is fixed for 4 qubits.")
 
     total_qubits = num_qubits * 2 + 1
-    total_params = 24
+    total_params = 36  # 12 parameters per layer * 3 layers
     params = ParameterVector(param_prefix, total_params)
 
     q = QuantumRegister(total_qubits, 'q')
@@ -25,19 +26,27 @@ def create_ansatz(num_qubits=4, param_prefix='θ'):
 
     # --- Layer 1 ---
     for i in range(num_qubits):
-        qc.rx(params[i], q[i])           # RX
-        qc.rz(params[4 + i], q[i])       # RZ
+        qc.rx(params[i], q[i])
+        qc.rz(params[4 + i], q[i])
     for idx, (ctrl, targ) in enumerate(crx_pairs):
         qc.crx(params[8 + idx], q[ctrl], q[targ])
 
     # --- Layer 2 ---
     for i in range(num_qubits):
-        qc.rx(params[12 + i], q[i])      # RX
-        qc.rz(params[16 + i], q[i])      # RZ
+        qc.rx(params[12 + i], q[i])
+        qc.rz(params[16 + i], q[i])
     for idx, (ctrl, targ) in enumerate(crx_pairs):
         qc.crx(params[20 + idx], q[ctrl], q[targ])
 
+    # --- Layer 3 ---
+    for i in range(num_qubits):
+        qc.rx(params[24 + i], q[i])
+        qc.rz(params[28 + i], q[i])
+    for idx, (ctrl, targ) in enumerate(crx_pairs):
+        qc.crx(params[32 + idx], q[ctrl], q[targ])
+
     return qc, params
+
 
 
 def create_reset_circuit(num_qubits, compression_level):
